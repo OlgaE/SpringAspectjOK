@@ -1,5 +1,7 @@
 package com.demo.aspect;
 
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -49,8 +51,7 @@ public class LoggingAspect {
 	// *****
 	
 	// A pointcut for all methods in a particular class:
-	// (any return point, public or anything else)
-	@Pointcut("* * com.demo.model.Circle.*(..)")
+	@Pointcut("execution(public void com.demo.model.Circle.getName())")
 	public void allCircleMethods(){}
 	
 	@Before("allCircleMethods()")
@@ -74,5 +75,19 @@ public class LoggingAspect {
 	@Before("allCircleMethods() && AllPackageMethods()")
 	public void LoggingAdvice7(){
 		System.out.println("Advice run. Get method called.");
+	}
+	
+	// Around:
+	@Around("allGetters()")
+	public void myAroundAdvice(ProceedingJoinPoint proceedingJoinPoint){
+
+		try {
+			System.out.println("Before:");
+			proceedingJoinPoint.proceed(); // this target method call can be skipped
+			System.out.println("After");
+		} catch (Throwable e) {
+			System.out.println("After");
+		} 
+		
 	}
 }
